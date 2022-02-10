@@ -1,0 +1,31 @@
+{
+  "Version": "2012-10-17",
+  "Statement":
+    ${jsonencode(concat([
+        for i, arn in bucket_arns : {
+            Sid: "__sender_statement_${i}"
+            Effect: "Allow",
+            Principal: "*",
+            Action: "sqs:SendMessage",
+            Resource: "arn:aws:sqs:*:${queue_name}",
+            Condition: {
+                "ArnEquals": { "aws:SourceArn": "${arn}" }
+            }
+        }
+    ], [
+      {
+        "Sid": "__receiver_statement",
+        "Effect": "Allow",
+        "Principal": {
+            "AWS": "${receiver_role}"
+        },
+        "Action": [
+          "SQS:ChangeMessageVisibility",
+          "SQS:DeleteMessage",
+          "SQS:ReceiveMessage"
+        ],
+        "Resource": "arn:aws:sqs:*:${queue_name}"
+      }
+    ])
+    )}
+}

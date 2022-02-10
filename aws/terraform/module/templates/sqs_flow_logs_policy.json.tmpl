@@ -1,0 +1,28 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "__sender_statement",
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "sqs:SendMessage",
+      "Resource": "arn:aws:sqs:*:${queue_name}",
+      "Condition": {
+        "ArnEquals": { "aws:SourceArn": "${bucket_arn}" }
+      }
+    },
+    {
+      "Sid": "__receiver_statement",
+      "Effect": "Allow",
+      "Principal": {
+          "AWS": "${receiver_role}"
+      },
+      "Action": [
+        "SQS:ChangeMessageVisibility",
+        "SQS:DeleteMessage",
+        "SQS:ReceiveMessage"
+      ],
+      "Resource": "arn:aws:sqs:*:${queue_name}"
+    }
+  ]
+}
