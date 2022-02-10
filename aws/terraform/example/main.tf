@@ -1,7 +1,6 @@
 
 provider "aws" {
-    #region = "us-east-1"
-    region = "ap-southeast-2"
+    region = "us-east-1"
 }
 
 data "aws_vpcs" "all_vpcs" {}
