@@ -4,8 +4,8 @@
     {
       "Effect": "Allow",
       "Action": [
-        "s3:List*",
-        "s3:HeadBucket"],
+        "s3:List*"
+      ],
       "Resource": ${jsonencode([
         for bucket in buckets_list : bucket
       ])}
