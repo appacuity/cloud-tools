@@ -2,12 +2,15 @@
 
 restoreAwsAuthConfigMap=false
 
-existingConfigsDir=$1
+allArgs=($*)
 
+existingConfigsDir=${allArgs[0]}
 if [ "${existingConfigsDir}" = "" ]; then
     echo Must specify stored configuration directory.
     exit 1
 fi
+
+clusterNames=${allArgs[@]:1}
 
 function get_cluster_names() {
     aws eks list-clusters | jq -r ' . | .clusters[]'
@@ -51,9 +54,14 @@ function restore_cluster_config() {
 account=$(aws sts get-caller-identity | jq -r '.Account')
 region=$(aws configure get region)
 
-echo "Looking for clusters in ${account}:${region} ..."
+if ((${#clusterNames[@]})); then
+    echo "Clusters specified on command line: ${clusterNames[@]}"
+else
+    echo "Looking for clusters in ${account}:${region} ..."
+    clusterNames=($(get_cluster_names))
+fi
 
-for clusterName in $(get_cluster_names) ; do
+for clusterName in ${clusterNames[@]} ; do
     echo "### Found cluster: ${clusterName} ###"
     aws eks update-kubeconfig --region ${region} --name ${clusterName} --kubeconfig ./kubeconfig
     if [ $? -ne 0 ] ; then

@@ -2,6 +2,9 @@
 
 updateAwsAuthConfigMap=true
 
+allArgs=($*)
+
+clusterNames=${allArgs[@]}
 existingConfigsDir=existing-configs-$(date +"%Y%m%d-%H%M%S")
 
 function get_sqs_url() {
@@ -62,9 +65,14 @@ function deploy_cluster() {
 account=$(aws sts get-caller-identity | jq -r '.Account')
 region=$(aws configure get region)
 
-echo "Looking for clusters in ${account}:${region} ..."
+if ((${#clusterNames[@]})); then
+    echo "Clusters specified on command line: ${clusterNames[@]}"
+else
+    echo "Looking for clusters in ${account}:${region} ..."
+    clusterNames=($(get_cluster_names))
+fi
 
-for clusterName in $(get_cluster_names) ; do
+for clusterName in ${clusterNames[@]} ; do
     echo "### Found cluster: ${clusterName} ###"
     aws eks update-kubeconfig --region ${region} --name ${clusterName} --kubeconfig ./kubeconfig
     if [ $? -ne 0 ] ; then
