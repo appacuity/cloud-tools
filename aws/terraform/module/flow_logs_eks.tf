@@ -52,6 +52,8 @@ resource "aws_sqs_queue" "eks_sqs_queues" {
   policy = templatefile(
     "${path.module}/templates/sqs_eks_policy.json.tmpl",
     {
+      account_id = data.aws_caller_identity.current.account_id,
+      region = data.aws_region.current.name,
       receiver_role = aws_iam_role.flow_logs_role[0].arn,
       bucket_arns = local.arns_by_cluster[local.clusters[count.index]],
       queue_name = join("-", [var.eks_queue_prefix, substr(local.clusters[count.index], 0, 65)]) # MUST MATCH ABOVE

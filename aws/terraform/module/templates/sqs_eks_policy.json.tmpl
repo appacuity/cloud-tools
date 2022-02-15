@@ -5,12 +5,11 @@
         for i, arn in bucket_arns : {
             Sid: "__sender_statement_${i}"
             Effect: "Allow",
-            Principal: "*",
+            Principal: {
+              "AWS": "${arn}"
+            },
             Action: "sqs:SendMessage",
-            Resource: "arn:aws:sqs:*:${queue_name}",
-            Condition: {
-                "ArnEquals": { "aws:SourceArn": "${arn}" }
-            }
+            Resource: "arn:aws:sqs:${region}:${account_id}:${queue_name}"
         }
     ], [
       {
@@ -24,7 +23,7 @@
           "SQS:DeleteMessage",
           "SQS:ReceiveMessage"
         ],
-        "Resource": "arn:aws:sqs:*:${queue_name}"
+        "Resource": "arn:aws:sqs:${region}:${account_id}:${queue_name}"
       }
     ])
     )}

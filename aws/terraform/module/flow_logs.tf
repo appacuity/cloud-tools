@@ -48,6 +48,8 @@ resource "aws_sqs_queue" "sqs_queues" {
   policy = templatefile(
     "${path.module}/templates/sqs_flow_logs_policy.json.tmpl",
     {
+      account_id = data.aws_caller_identity.current.account_id,
+      region = data.aws_region.current.name,
       receiver_role = aws_iam_role.flow_logs_role[0].arn,
       bucket_arn = aws_s3_bucket.vpc_logs[count.index].arn,
       queue_name = join("-", [var.s3_bucket_prefix, data.aws_caller_identity.current.account_id, var.vpc_id_list[count.index], "queue"]) # MUST MATCH ABOVE

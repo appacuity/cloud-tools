@@ -6,7 +6,7 @@
       "Effect": "Allow",
       "Principal": "*",
       "Action": "sqs:SendMessage",
-      "Resource": "arn:aws:sqs:*:${queue_name}",
+      "Resource": "arn:aws:sqs:${region}:${account_id}:${queue_name}",
       "Condition": {
         "ArnEquals": { "aws:SourceArn": "${bucket_arn}" }
       }
@@ -22,7 +22,7 @@
         "SQS:DeleteMessage",
         "SQS:ReceiveMessage"
       ],
-      "Resource": "arn:aws:sqs:*:${queue_name}"
+      "Resource": "arn:aws:sqs:${region}:${account_id}:${queue_name}"
     }
   ]
 }
