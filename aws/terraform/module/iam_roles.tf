@@ -7,7 +7,9 @@ resource "aws_iam_role" "scan_role" {
     description = "Provides access for AppAcuity to scan a customer's AWS environment"
     force_detach_policies = true
 
-    assume_role_policy = templatefile("${path.module}/templates/assume_role.json.tmpl", {})
+    assume_role_policy = templatefile("${path.module}/templates/assume_role.json.tmpl", {
+        external_id = var.customer_id
+    })
     tags = {
         Provisioner = "TFAppAcuity"
     }
@@ -45,7 +47,9 @@ resource "aws_iam_role" "flow_logs_role" {
     description = "Provides access for AppAcuity to read Flow Logs"
     force_detach_policies = true
 
-    assume_role_policy = templatefile("${path.module}/templates/assume_role.json.tmpl", {})
+    assume_role_policy = templatefile("${path.module}/templates/assume_role.json.tmpl", {
+        external_id = var.customer_id
+    })
     tags = {
         Provisioner = "TFAppAcuity"
     }

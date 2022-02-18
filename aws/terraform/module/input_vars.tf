@@ -68,5 +68,10 @@ variable "iam_role_prefix" {
     default = "TFAppAcuity"
 }
 
+variable "customer_id" {
+    description = "External ID used for AssumeRole operations"
+    type = string
+}
+
 
 # vim: nospell
