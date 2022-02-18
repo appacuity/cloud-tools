@@ -12,6 +12,7 @@ roles, permissions, and services necessary for AppAcuity to:
 1. Terraform 0.13.0 or greater. Terraform is an open-source tool to
    manage AWS services.
 2. AWS admin credentials
+3. Unique Customer ID supplied by AppAcuity
 
 
 ## What Is Configured?
@@ -40,10 +41,11 @@ roles, permissions, and services necessary for AppAcuity to:
 
 ### Installation Options
 
-1. Configure the AWS region: set ``region = ...`` (default is ``us-east-1``)<br>_Note: only a single region is currently supported_
-2. Disable Configuration Scan: set ``create_scan_role = false``
-3. Disable Network Flows: set ``enable_flow_logs = false``
-4. Limit Network Flows to specific VPCs: replace ``vpc_id_list`` with an array of VPC ids. These will need to be looked up in your AWS environment.
+1. (required) Set the Customer ID: set ``customer_id = "..."`` (this needs to be supplied by AppAcuity)
+2. Configure the AWS region: set ``region = ...`` (default is ``us-east-1``)<br>_Note: only a single region is currently supported_
+3. Disable Configuration Scan: set ``create_scan_role = false``
+4. Disable Network Flows: set ``enable_flow_logs = false``
+5. Limit Network Flows to specific VPCs: replace ``vpc_id_list`` with an array of VPC ids. These will need to be looked up in your AWS environment.
 
 
 ## Installation
@@ -53,7 +55,7 @@ are configured for use by Terraform. Refer to the AWS Provider
 documentation for more information: https://registry.terraform.io/providers/hashicorp/aws/latest/docs_
 
 1. unzip the tool distribution and change into the directory
-2. optionally edit ``main.tf`` (see _Installation Options_ above)
+2. edit ``main.tf`` (see _Installation Options_ above)
 3. run ``$ terraform init``
 4. run ``$ terraform validate``
 5. run ``$ terraform plan``<br>This command will print out the planned set of changes which can be inspected if desired.
