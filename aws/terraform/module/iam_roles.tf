@@ -41,7 +41,7 @@ resource "aws_iam_role_policy_attachment" "attach_secaudit_policy" {
 // ---- FLOW LOGS
 
 resource "aws_iam_role" "flow_logs_role" {
-    count = var.create_flow_logs_role ? 1 : 0
+    count = var.enable_flow_logs && var.create_flow_logs_role ? 1 : 0
     name = "${var.iam_role_prefix}_FlowLogs"
 
     description = "Provides access for AppAcuity to read Flow Logs"
@@ -56,7 +56,7 @@ resource "aws_iam_role" "flow_logs_role" {
 }
 
 resource "aws_iam_policy" "appacuity_s3_policy" {
-    count = var.create_flow_logs_role ? 1 : 0
+    count = var.enable_flow_logs && var.create_flow_logs_role ? 1 : 0
     name        = "${var.iam_role_prefix}_S3PolicyAccess"
 
     description = "Provides access to S3 resources (Flow Logs)"
@@ -71,13 +71,13 @@ resource "aws_iam_policy" "appacuity_s3_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "attach_s3_policy" {
-  count      = var.create_flow_logs_role ? 1 : 0
+  count      = var.enable_flow_logs && var.create_flow_logs_role ? 1 : 0
   role       = aws_iam_role.flow_logs_role[count.index].name
   policy_arn = aws_iam_policy.appacuity_s3_policy[count.index].arn
 }
 
 resource "aws_iam_role_policy_attachment" "attach_ec2readonly_policy" {
-  count      = var.create_flow_logs_role ? 1 : 0
+  count      = var.enable_flow_logs && var.create_flow_logs_role ? 1 : 0
   role       = aws_iam_role.flow_logs_role[count.index].name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }

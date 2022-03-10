@@ -13,7 +13,7 @@ module "appacuity_aws_integration" {
     // customer_id = ""
 
     create_scan_role = true
-    enable_flow_logs = true
+    enable_flow_logs = false
     // example custom VPCs: vpc_id_list = ["vpc-012345678abc123"]
     vpc_id_list = data.aws_vpcs.all_vpcs.ids
 
