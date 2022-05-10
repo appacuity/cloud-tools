@@ -1,6 +1,0 @@
-data:
-  mapRoles:
-    - roleArn: arn:aws:iam::<ACCOUNT>:role/TFAppAcuity_Scanner
-      username: appacuity-scanner
-      groups:
-        - appacuity-read-access-group
