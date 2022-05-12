@@ -4,7 +4,7 @@
         "AWS::CloudFormation::Interface": {
             "ParameterGroups": [
                 {
-                    "Label": {"default": "AppAcuity Connector Configuration"},
+                    "Label": {"default": "AppAcuity Trust Configuration"},
                     "Parameters": [
                         "PrincipalAWS",
                         "CustomerInstanceID"
@@ -13,7 +13,7 @@
             ],
             "ParameterLabels": {
                 "PrincipalAWS": {"default": "AppAcuity Trust ARN"},
-                "CustomerInstanceID": {"default": "Customer Instance ID"}
+                "CustomerID": {"default": "Customer ID"}
             }
         }
     },
@@ -36,7 +36,7 @@
                             "Condition": {
                                 "StringEquals": {
                                     "sts:ExternalId": {
-                                        "Ref": "CustomerInstanceID"
+                                        "Ref": "CustomerID"
                                     }
                                 }
                             }
@@ -81,11 +81,11 @@
             "ConstraintDescription": "The Amazon Resource Name (ARN) of the AppAcuity AWS account connector",
             "AllowedPattern": "arn:aws:iam::[0-9]+:role+/.*"
         },
-        "CustomerInstanceID": {
+        "CustomerID": {
             "Type": "String",
             "Description": "Unique ID per customer instance, provided by AppAcuity",
-            "ConstraintDescription": "must use exact ID supplied",
-            "AllowedPattern": "[0-9a-z]{14}"
+            "ConstraintDescription": "This field is required, contact AppAcuity for your ID.",
+            "AllowedPattern": "[0-9a-zA-Z+]{64}"
         }
     }
 }
