@@ -1,0 +1,91 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {"default": "AppAcuity Connector Configuration"},
+                    "Parameters": [
+                        "PrincipalAWS",
+                        "CustomerInstanceID"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "PrincipalAWS": {"default": "AppAcuity Trust ARN"},
+                "CustomerInstanceID": {"default": "Customer Instance ID"}
+            }
+        }
+    },
+    "Resources": {
+        "AppAcuityScanRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "RoleName": "AppAcuityScanRole",
+                "AssumeRolePolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": {
+                                    "Ref": "PrincipalAWS"
+                                }
+                            },
+                            "Action": "sts:AssumeRole",
+                            "Condition": {
+                                "StringEquals": {
+                                    "sts:ExternalId": {
+                                        "Ref": "CustomerInstanceID"
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                },
+                "Path": "/",
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/SecurityAudit"
+                ]
+            }
+        },
+        "AppAcuityScanPolicy": {
+            "Type": "AWS::IAM::Policy",
+            "Properties": {
+                "PolicyName": "AppAcuityScanPolicy",
+                "PolicyDocument": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Resource": "*",
+                            "Action": [
+                                "eks:ListTagsForResource",
+                                "inspector2:ListFindings",
+                                "inspector2:ListCoverage"
+                            ]
+                        }
+                    ]
+                },
+                "Roles": [
+                    {"Ref": "AppAcuityScanRole"}
+                ]
+            }
+        }
+    },
+    "Parameters": {
+        "PrincipalAWS": {
+            "Type": "String",
+            "Default": "arn:aws:iam::034022773758:role/AppAcuityHostedInstance",
+            "Description": "The Amazon Resource Name (ARN) of the AppAcuity AWS account to establish a trust relationship with.",
+            "ConstraintDescription": "The Amazon Resource Name (ARN) of the AppAcuity AWS account connector",
+            "AllowedPattern": "arn:aws:iam::[0-9]+:role+/.*"
+        },
+        "CustomerInstanceID": {
+            "Type": "String",
+            "Description": "Unique ID per customer instance, provided by AppAcuity",
+            "ConstraintDescription": "must use exact ID supplied",
+            "AllowedPattern": "[0-9a-z]{14}"
+        }
+    }
+}
