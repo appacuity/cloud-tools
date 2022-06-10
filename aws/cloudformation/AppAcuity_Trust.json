@@ -62,7 +62,8 @@
                             "Action": [
                                 "eks:ListTagsForResource",
                                 "inspector2:ListFindings",
-                                "inspector2:ListCoverage"
+                                "inspector2:ListCoverage",
+                                "ec2:SearchTransitGatewayRoutes"
                             ]
                         }
                     ]
